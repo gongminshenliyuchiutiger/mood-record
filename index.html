@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Record</title>
+  
+  <!-- Font Awesome 6.5.1 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Google Fonts for High Readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <i class="fa-solid fa-brain brand-icon"></i>
+        <div>
+          <h1 class="brand-title">Mood Record</h1>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- 明暗雙模式切換按鈕 (預設明亮，按鈕顯示月亮) -->
+        <button id="btnThemeToggle" class="btn btn-secondary btn-icon-only" title="切換至暗色模式">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- 檢視報告 -->
+        <button id="btnOpenReport" class="btn btn-secondary btn-icon-only" title="總結報告">
+          <i class="fa-solid fa-file-lines"></i>
+        </button>
+
+        <!-- 清空重置 -->
+        <button id="btnClearRecord" class="btn btn-secondary btn-icon-only" title="清空紀錄">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3 Roles Context Banner -->
+  <section class="roles-banner">
+    <div class="roles-grid">
+      <!-- 敘事者 -->
+      <div class="role-pill role-narrator">
+        <div class="role-icon-box">
+          <i class="fa-solid fa-bullhorn"></i>
+        </div>
+        <div class="role-details">
+          <h4>敘事者 <span style="font-size:0.75rem; color: #d97706; font-weight: 600;">(可自訂觀察時間)</span></h4>
+          <p>專注描述一個自身真實經歷、且帶有感覺與情緒的事件。</p>
+        </div>
+      </div>
+
+      <!-- 對話者 -->
+      <div class="role-pill role-listener">
+        <div class="role-icon-box">
+          <i class="fa-solid fa-comments"></i>
+        </div>
+        <div class="role-details">
+          <h4>對話者 <span style="font-size:0.75rem; color: #059669; font-weight: 600;">(同理傾聽)</span></h4>
+          <p>專心傾聽與適時回應，保持好奇共感，不偏離主題、不搶麥搶話。</p>
+        </div>
+      </div>
+
+      <!-- 觀察者 (系統使用者) -->
+      <div class="role-pill role-observer active-observer">
+        <div class="role-icon-box">
+          <i class="fa-solid fa-binoculars"></i>
+        </div>
+        <div class="role-details">
+          <h4>
+            觀察者 
+            <span class="user-tag">使用者</span>
+          </h4>
+          <p>在旁敏銳捕捉兩人互動中出現的情緒詞彙，進行時間標記與筆記。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Interaction Container -->
+  <main class="main-content">
+    
+    <!-- Left Column: Timer & Observer Notes -->
+    <aside class="left-panel">
+      <!-- Timer Card with Countdown & System Time Mode -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i id="modeHeaderIcon" class="fa-solid fa-stopwatch"></i>
+            <span id="modeHeaderTitle">敘事者觀察計時器</span>
+          </div>
+        </div>
+
+        <!-- 模式切換按鈕 (倒數計時 vs 記錄系統時間) -->
+        <div class="timer-mode-switcher">
+          <button type="button" class="mode-tab active" id="tabModeCountdown" data-mode="countdown">
+            <i class="fa-solid fa-stopwatch"></i>
+            <span>倒數計時</span>
+          </button>
+          <button type="button" class="mode-tab" id="tabModeRealtime" data-mode="realtime">
+            <i class="fa-regular fa-clock"></i>
+            <span>系統時間</span>
+          </button>
+        </div>
+
+        <!-- 自訂觀察時間折疊區 (預設縮起，僅在倒數計時模式顯示) -->
+        <div id="timeSettingsSection" class="time-collapsible-wrapper">
+          <button type="button" id="btnToggleTimeSettings" class="btn-time-collapse-toggle" title="展開/收起時間設定">
+            <span class="toggle-title-left">
+              <i class="fa-solid fa-sliders"></i>
+              <span>設定觀察時間</span>
+              <span id="currentTimeBadge" class="cat-count-pill">90 秒</span>
+            </span>
+            <i id="timeChevron" class="fa-solid fa-chevron-down time-chevron"></i>
+          </button>
+
+          <div id="timeCustomToolbar" class="time-custom-toolbar is-collapsed">
+            <div class="time-preset-buttons">
+              <button type="button" class="btn-time-preset" data-seconds="60">60 秒</button>
+              <button type="button" class="btn-time-preset active" data-seconds="90">90 秒</button>
+              <button type="button" class="btn-time-preset" data-seconds="120">120 秒</button>
+              <button type="button" class="btn-time-preset" data-seconds="180">180 秒</button>
+            </div>
+            <div class="custom-time-input-row">
+              <i class="fa-regular fa-clock"></i>
+              <span>自訂秒數：</span>
+              <input type="number" id="customTimeInput" min="5" max="3600" step="5" value="90">
+              <span>秒</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 倒數計時容器 -->
+        <div id="countdownContainer" class="timer-container">
+          <!-- 環形進度倒數計時 -->
+          <div class="circular-timer">
+            <svg class="timer-svg" viewBox="0 0 200 200">
+              <circle class="timer-track" cx="100" cy="100" r="90"></circle>
+              <circle id="timerProgress" class="timer-progress" cx="100" cy="100" r="90"></circle>
+            </svg>
+            <div class="timer-center-content">
+              <div id="timerDigits" class="timer-digits">01:30</div>
+              <div class="timer-subtext">Remaining</div>
+            </div>
+          </div>
+
+          <!-- Timer Action Buttons -->
+          <div class="timer-controls">
+            <button id="btnTimerToggle" class="btn btn-primary">
+              <i class="fa-solid fa-play"></i>
+              <span>開始計時</span>
+            </button>
+            <button id="btnTimerReset" class="btn btn-secondary btn-icon-only" title="重置計時器">
+              <i class="fa-solid fa-arrow-rotate-left"></i>
+            </button>
+          </div>
+
+          <div class="timer-options">
+            <button type="button" id="btnSoundToggle" class="btn-sound-toggle active" title="提示音效：已開啟 (點擊切換靜音)">
+              <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+            </button>
+            <span class="timer-keyboard-hint">
+              <i class="fa-regular fa-keyboard"></i> 空白鍵暫停/繼續
+            </span>
+          </div>
+        </div>
+
+        <!-- 非計時模式：即時系統時間容器 (預設隱藏，切換時顯示) -->
+        <div id="realtimeContainer" class="timer-container" style="display:none;">
+          <div class="realtime-clock-box">
+            <div id="realtimeDigits" class="realtime-clock-digits">--:--:--</div>
+            <div class="realtime-clock-status">
+              <span class="live-pulse-dot"></span>
+              <span>即時記錄系統時間模式</span>
+            </div>
+          </div>
+          <div style="font-size:0.85rem; color:var(--text-secondary); text-align:center; padding: 0.25rem 0.5rem; line-height: 1.5;">
+            <i class="fa-solid fa-circle-info" style="color:var(--accent);"></i> 點選右側詞彙將直接以當前系統時間進行時間戳記。
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Notes Card -->
+      <div class="panel-card notes-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <span>觀察者速記筆記</span>
+          </div>
+        </div>
+        <textarea id="quickNotes" class="quick-notes-textarea" placeholder="速記對話亮點、肢體語言或特殊情緒轉折..."></textarea>
+      </div>
+    </aside>
+
+    <!-- Right Column: Emotion Vocabulary Palette & Record Feeds -->
+    <div class="right-panel">
+      <!-- Fast Selection & Custom Add Card -->
+      <div class="panel-card palette-card">
+        <div class="palette-controls-header">
+          <div class="panel-title">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>情緒詞彙庫（四象限 100 詞）</span>
+          </div>
+          <!-- 預設收起，可點此一鍵全開/全收 -->
+          <button id="btnToggleAllCategories" class="btn-toggle-all" type="button">
+            <i class="fa-solid fa-angles-down"></i>
+            <span>展開全部詞彙</span>
+          </button>
+        </div>
+
+        <!-- Custom Word Input -->
+        <div class="custom-input-box">
+          <input type="text" id="customEmotionInput" placeholder="聽見新詞彙？輸入情緒詞（按 Enter 快速加入）..." autocomplete="off">
+          <button id="btnAddCustom" class="btn btn-primary" style="flex: initial; padding: 0.75rem 1.25rem;">
+            <i class="fa-solid fa-plus"></i>
+            <span>新增詞彙</span>
+          </button>
+        </div>
+
+        <!-- 4 Collapsible Category Blocks (Red, Yellow, Blue, Green) - Default Collapsed -->
+        <div id="categoryContainer" class="category-groups">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Realtime Counts & Timeline Log -->
+      <div class="recorded-section">
+        <!-- Frequency Cloud -->
+        <div class="frequency-panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i class="fa-solid fa-chart-pie"></i>
+              <span>已記錄詞彙頻率</span>
+            </div>
+            <span class="brand-badge">
+              共 <span id="totalCountBadge" style="font-weight: 800; margin: 0 2px;">0</span> 次
+            </span>
+          </div>
+
+          <div id="recordedCloud" class="recorded-chips-cloud">
+            <div class="empty-placeholder">
+              <i class="fa-solid fa-clipboard-list"></i>
+              <span>點選展開上方情緒詞彙，或自訂輸入即時累積</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline Log -->
+        <div class="timeline-panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i class="fa-solid fa-timeline"></i>
+              <span>即時時間軸軌跡</span>
+            </div>
+          </div>
+
+          <div id="timelineFeed" class="timeline-feed">
+            <div class="empty-placeholder">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <span>敘事者發言時，記錄將依秒數即時排序列出</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mascot (LiyuChillGuy) - Left Bottom, Draggable, Neon Glow + Jitter on Hover (No text above) -->
+  <div id="mascotLiyu" class="mascot-container" title="可隨意拖曳我到任何地方喔！">
+    <div class="mascot-wrapper">
+      <img src="image/LiyuChillGuy.svg" alt="LiyuChillGuy" class="mascot-img">
+    </div>
+  </div>
+
+  <!-- Summary Report Modal -->
+  <div id="reportModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="display:flex; align-items:center; gap:0.5rem; font-size:1.15rem; color:var(--text-primary);">
+          <i class="fa-solid fa-file-invoice" style="color:var(--accent);"></i>
+          <span>情緒記錄總結報告</span>
+        </h3>
+        <button id="btnCloseModal" class="btn btn-secondary btn-icon-only btn-modal-close" title="關閉">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="reportContent" class="report-preview-box"></div>
+      </div>
+      <div class="actions-bar" style="margin-top: 1.25rem;">
+        <button id="btnDownloadTxt" class="btn btn-secondary">
+          <i class="fa-solid fa-download"></i>
+          <span>下載報告 (.txt)</span>
+        </button>
+        <button id="btnCopyReport" class="btn btn-primary">
+          <i class="fa-solid fa-copy"></i>
+          <span>複製全文報告</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <!-- Facebook Fanpage Link Card directly above copyright -->
+      <a href="https://www.facebook.com/happyliyuchilltiger/" target="_blank" rel="noopener noreferrer" class="fb-fanpage-card" title="前往 快樂鯉魚秋老虎 Facebook 粉絲專頁">
+        <span class="fb-icon">
+          <i class="fa-brands fa-facebook"></i>
+        </span>
+        <span class="fb-text-title">快樂鯉魚秋老虎</span>
+      </a>
+
+      <!-- Copyright Notice -->
+      <div class="copyright-text">
+        Copyright © Liyuchiutiger Gongminshen
+      </div>
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>
