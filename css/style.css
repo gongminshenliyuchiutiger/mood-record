@@ -752,13 +752,15 @@ body {
   background: var(--bg-input);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
-  padding: 0.35rem 0.75rem;
-  font-size: 0.825rem;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 0.92rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
   transition: all 0.2s;
 }
 
@@ -770,16 +772,18 @@ body {
 .custom-input-box {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.25rem;
+  align-items: center;
+  margin-bottom: 1.15rem;
 }
 
 .custom-input-box input {
   flex: 1;
+  min-width: 0;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-  font-size: 0.98rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
   color: var(--text-primary);
   outline: none;
   transition: all 0.2s;
@@ -1451,30 +1455,76 @@ body {
 }
 
 @media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
+  .app-header {
+    padding: 0.65rem 1rem;
   }
-  
+
+  .header-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .brand-section {
+    gap: 0.5rem;
+  }
+
+  .brand-icon {
+    font-size: 1.45rem;
+  }
+
+  .brand-title {
+    font-size: 1.3rem;
+  }
+
+  .header-actions {
+    gap: 0.4rem;
+  }
+
+  .main-content {
+    margin: 1rem auto 2.5rem;
+    padding: 0 0.85rem;
+    gap: 1.25rem;
+  }
+
+  .panel-card {
+    padding: 1.1rem;
+  }
+
+  .cat-header-clickable {
+    padding: 0.75rem 0.95rem;
+    font-size: 0.92rem;
+  }
+
   .emotion-tags {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.45rem;
   }
-  
+
+  .emotion-chip {
+    padding: 0.45rem 0.6rem;
+  }
+
+  .chip-zh {
+    font-size: 0.88rem;
+  }
+
+  .chip-en {
+    font-size: 0.7rem;
+  }
+
   .recorded-section {
     grid-template-columns: 1fr;
   }
-  
+
   .mascot-container {
-    bottom: 20px;
-    left: 16px;
+    bottom: 12px;
+    left: 10px;
   }
-  
+
   .mascot-wrapper {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .brand-title {
-    font-size: 1.4rem;
+    width: 65px;
+    height: 65px;
   }
 }

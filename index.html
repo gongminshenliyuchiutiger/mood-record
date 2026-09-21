@@ -210,21 +210,19 @@
         <div class="palette-controls-header">
           <div class="panel-title">
             <i class="fa-solid fa-layer-group"></i>
-            <span>情緒詞彙庫（四象限 100 詞）</span>
+            <span>情緒詞彙庫</span>
           </div>
-          <!-- 預設收起，可點此一鍵全開/全收 -->
-          <button id="btnToggleAllCategories" class="btn-toggle-all" type="button">
+          <!-- 預設收起，留符號即可 -->
+          <button id="btnToggleAllCategories" class="btn-toggle-all btn-icon-only" type="button" title="展開/收起全部詞彙">
             <i class="fa-solid fa-angles-down"></i>
-            <span>展開全部詞彙</span>
           </button>
         </div>
 
         <!-- Custom Word Input -->
         <div class="custom-input-box">
-          <input type="text" id="customEmotionInput" placeholder="聽見新詞彙？輸入情緒詞（按 Enter 快速加入）..." autocomplete="off">
-          <button id="btnAddCustom" class="btn btn-primary" style="flex: initial; padding: 0.75rem 1.25rem;">
+          <input type="text" id="customEmotionInput" placeholder="輸入情緒詞（按 Enter 快速新增）..." autocomplete="off">
+          <button id="btnAddCustom" class="btn btn-primary btn-icon-only" type="button" title="新增詞彙">
             <i class="fa-solid fa-plus"></i>
-            <span>新增詞彙</span>
           </button>
         </div>
 
@@ -299,13 +297,11 @@
         <div id="reportContent" class="report-preview-box"></div>
       </div>
       <div class="actions-bar" style="margin-top: 1.25rem;">
-        <button id="btnDownloadTxt" class="btn btn-secondary">
+        <button id="btnDownloadTxt" class="btn btn-secondary btn-icon-only" title="下載報告 (.txt)">
           <i class="fa-solid fa-download"></i>
-          <span>下載報告 (.txt)</span>
         </button>
-        <button id="btnCopyReport" class="btn btn-primary">
+        <button id="btnCopyReport" class="btn btn-primary btn-icon-only" title="複製全文報告">
           <i class="fa-solid fa-copy"></i>
-          <span>複製全文報告</span>
         </button>
       </div>
     </div>

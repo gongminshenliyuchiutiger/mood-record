@@ -451,7 +451,7 @@ class MoodRecordApp {
         block.classList.add('is-expanded');
       }
 
-      // 標題列 (Click to Toggle Accordion)
+      // 標題列 (Click to Toggle Accordion - 不顯示詞數)
       const header = document.createElement('div');
       header.className = 'cat-header-clickable';
       header.innerHTML = `
@@ -459,7 +459,6 @@ class MoodRecordApp {
           <span class="color-indicator-dot"></span>
           <i class="fa-solid ${cat.icon}"></i>
           <span class="cat-title-text">${cat.colorName}區：${cat.title}</span>
-          <span class="cat-count-pill">${cat.words.length} 詞</span>
         </div>
         <div class="cat-chevron">
           <i class="fa-solid fa-chevron-down"></i>
@@ -520,10 +519,12 @@ class MoodRecordApp {
 
     if (this.btnToggleAllCategories) {
       if (targetState) {
-        this.btnToggleAllCategories.innerHTML = '<i class="fa-solid fa-angles-down"></i> <span>展開全部詞彙</span>';
+        this.btnToggleAllCategories.innerHTML = '<i class="fa-solid fa-angles-down"></i>';
+        this.btnToggleAllCategories.title = '展開全部詞彙';
         this.showToast('已收起所有情緒詞彙');
       } else {
-        this.btnToggleAllCategories.innerHTML = '<i class="fa-solid fa-angles-up"></i> <span>收起全部詞彙</span>';
+        this.btnToggleAllCategories.innerHTML = '<i class="fa-solid fa-angles-up"></i>';
+        this.btnToggleAllCategories.title = '收起全部詞彙';
         this.showToast('已展開所有情緒詞彙');
       }
     }
